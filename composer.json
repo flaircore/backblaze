@@ -1,0 +1,30 @@
+{
+    "name": "flaircore/backblaze",
+    "description": "PHP wrapper around B2 Cloud storage APIs",
+    "keywords": [
+        "cloud storage",
+        "bucket",
+        "backblaze"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Flaircore\\Backblaze\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nicholas Njogu",
+            "email": "nijoba33@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2.5 || ^8.0",
+        "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "monolog/monolog": "^3.3"
+    }
+}
