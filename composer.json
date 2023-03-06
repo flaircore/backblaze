@@ -13,6 +13,11 @@
             "Flaircore\\Backblaze\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Flaircore\\Backblaze\\Tests": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Nicholas Njogu",
@@ -25,6 +30,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "monolog/monolog": "^3.3"
+        "monolog/monolog": "^3.3",
+        "phpunit/phpunit": "^10.0"
     }
 }

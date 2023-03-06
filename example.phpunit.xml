@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="vendor/autoload.php"
+         cacheResult="false"
+>
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="display_errors" value="On" />
+        <ini name="display_warnings" value="On" />
+        <ini name="display_startup_errors" value="On" />
+    </php>
+</phpunit>

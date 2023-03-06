@@ -50,8 +50,8 @@ class BackblazeClient implements B2ClientInterface {
      * @throws \Exception
      */
     final public function b2AuthorizeAccount(){
-        $application_key_id = B2_API_KEY;
-        $application_key = B2_API_SECRET;
+        $application_key_id = $this->b2Configs['B2_API_KEY'];
+        $application_key = $this->b2Configs['B2_API_SECRET'];
         $credentials = base64_encode($application_key_id . ":" . $application_key);
         $url = self::BASE_URL ."b2_authorize_account";
 
@@ -76,51 +76,6 @@ class BackblazeClient implements B2ClientInterface {
         } catch (\Throwable $ex) {
             throw new \Exception("Error making request ". $ex->getMessage());
         }
-    }
-
-    /**
-     * @param $api_url
-     * @param $auth_token
-     * @param $key
-     *  The file name of the file to be uploaded
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    final public function b2StartLargeFile($api_url, $auth_token, $key) {
-        // The content type of the file. See b2_start_large_file documentation for more information.
-        $content_type = "b2/x-auto";
-
-        // Provided by b2_create_bucket, b2_list_buckets
-        $bucket_id = $this->b2Configs['B2_BUCKET_ID'];
-
-        // Construct the JSON to post
-        $data = array("fileName" => $key, "bucketId" => $bucket_id, "contentType" => $content_type);
-        $post_fields = json_encode($data);
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => [$auth_token]
-        ];
-
-        try {
-	        $client = $this->client();
-            $res = $client->postAsync($api_url . "/b2api/v2/b2_start_large_file", [
-                    'headers' => $headers,
-                    'body' => $post_fields,
-                ]
-            )->wait();
-
-            if ($res->getStatusCode() == 200) {
-
-                return json_decode($res->getBody());
-            } else {
-                throw new \Exception("Error making request ". $res->getBody());
-            }
-
-        } catch (\Throwable $ex) {
-            throw new \Exception("Error making request ". $ex->getMessage());
-        }
-
     }
 
 	/**
@@ -208,7 +163,7 @@ class BackblazeClient implements B2ClientInterface {
 	 *
 	 * @return mixed
 	 */
-	final public function b2UploadFile($file_name, $local_file, $upload_url, $upload_auth_token, ) {
+	final public function b2UploadFile($file_name, $local_file, $upload_url, $upload_auth_token ) {
 
 	    $client = $this->client();
 
@@ -240,6 +195,56 @@ class BackblazeClient implements B2ClientInterface {
 
 
     }
+
+	/**
+	 * @param $api_url
+	 * @param $auth_token
+	 * @param $key
+	 *  The file name of the file to be uploaded
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	final public function b2StartLargeFile($api_url, $auth_token, $key) {
+		// The content type of the file. See b2_start_large_file documentation for more information.
+		$content_type = "b2/x-auto";
+
+		// Provided by b2_create_bucket, b2_list_buckets
+		$bucket_id = $this->b2Configs['B2_BUCKET_ID'];
+
+		// Construct the JSON to post
+		$data = [
+			"fileName" => $key,
+			"bucketId" => $bucket_id,
+			"contentType" => $content_type
+		];
+
+		$post_fields = json_encode($data);
+		$headers = [
+			'Accept' => 'application/json',
+			'Authorization' => [$auth_token]
+		];
+
+		try {
+			$client = $this->client();
+			$res = $client->postAsync($api_url . "/b2api/v2/b2_start_large_file", [
+					'headers' => $headers,
+					'body' => $post_fields,
+				]
+			)->wait();
+
+			if ($res->getStatusCode() == 200) {
+
+				return json_decode($res->getBody());
+			} else {
+				throw new \Exception("Error making request ". $res->getBody());
+			}
+
+		} catch (\Throwable $ex) {
+			throw new \Exception("Error making request ". $ex->getMessage());
+		}
+
+	}
 
 	/**
 	 * Uploads chucks as well as finish the upload.
@@ -331,10 +336,10 @@ class BackblazeClient implements B2ClientInterface {
 
 			// Finish the upload
 
-			$data = array(
+			$data = [
 				"fileId" => $file_id,
 				"partSha1Array" => $sha1_of_parts
-			);
+			];
 
 			$headers = [
 				'Accept' => 'application/json',
@@ -363,5 +368,6 @@ class BackblazeClient implements B2ClientInterface {
 	private function curlReadFile($curl_rsrc, $file_pointer, $length) {
 		return fread($file_pointer, $length);
 	}
+
 
 }

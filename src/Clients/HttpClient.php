@@ -12,8 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 trait HttpClient {
 	private $MAX_RETRIES = 5;
 
-	private $BASE_URL = 'https://api.backblazeb2.com/b2api/v2/';
-
 	/**
 	 * @var Client
 	 */
@@ -46,8 +44,8 @@ trait HttpClient {
 		$stack->push(Middleware::retry($decider, $delay));
 
 		$this->httpClient = new Client([
-			'base_uri' => 'https://api.backblazeb2.com/b2api/v2/',
-			//'handler'  => $stack,
+			//'base_uri' => 'https://api.backblazeb2.com/b2api/v2/',
+			'handler'  => $stack,
 		]);
 	}
 
